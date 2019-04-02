@@ -10,24 +10,39 @@ import * as S from "./RNMarker.style";
 import { readableColor } from "polished";
 
 type Props = {
-  marker: RnMarkerFragment & { obstructed: boolean };
+  type:
+    | "IRON"
+    | "COPPER"
+    | "LIMESTONE"
+    | "BAUXITE"
+    | "URANIUM"
+    | "COAL"
+    | "OIL"
+    | "SULFUR"
+    | "QUARTZ"
+    | "SAM"
+    | "CATERIUM"
+    | "GEYSER"
+    | "UNKNOWN";
+  quality: 0 | 1 | 2;
+  obstructed?: boolean;
   iconSize: number;
 };
 
 export const RNMarkerIcon = (props: Props) => {
-  const { marker, iconSize } = props;
+  const { type, quality, iconSize, obstructed } = props;
 
-  const color = getDepositColor(marker.type);
+  const color = getDepositColor(type);
   let icon: JSX.Element;
   let fontSize = iconSize / 2;
   let top = iconSize / 10;
 
-  if (marker.quality === ResourceNodeQuality.Impure) {
+  if (quality === 0) {
     icon = <RNMarkerImpure color={color} />;
     top += iconSize / 5;
-  } else if (marker.quality === ResourceNodeQuality.Normal) {
+  } else if (quality === 1) {
     icon = <RNMarkerNormal color={color} />;
-  } else if (marker.quality === ResourceNodeQuality.Pure) {
+  } else if (quality === 2) {
     top += iconSize / 20;
     icon = <RNMarkerPure color={color} />;
   } else {
@@ -39,9 +54,9 @@ export const RNMarkerIcon = (props: Props) => {
       <S.Root>
         {icon}
         <S.Letter style={{ fontSize, top, color: readableColor(color) }}>
-          {marker.type[0]}
+          {type[0]}
         </S.Letter>
-        {marker.obstructed && (
+        {obstructed && (
           <S.Obstruction
             xmlns="http://www.w3.org/2000/svg"
             version="1"

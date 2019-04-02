@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import * as L from "leaflet";
 import "leaflet.markercluster";
 import "leaflet-rastercoords";
-import MarkerClusterGroup from "react-leaflet-markercluster";
 import * as S from "./InteractiveMap.style";
 import {
   useInteractiveMap,
@@ -23,12 +22,10 @@ import {
 } from "../../utils/getDefaultMarkerSelection";
 import IconMenu from "@material-ui/icons/Menu";
 import IconClose from "@material-ui/icons/Close";
-import { Map, TileLayer, Marker, CircleMarker, Popup } from "react-leaflet";
-import { getSlugColor } from "../../utils/getSlugColor";
-import { RNMarkerIcon } from "./components/RNMarker/RNMarker";
-import { DropPodIcon } from "./components/DropPodMarker/DropPodMarker";
+import { Map, TileLayer } from "react-leaflet";
 import { LocateMe } from "./components/LocateMe/LocateMe";
 import { PlayerLocation } from "../../utils/getPlayersFromSave";
+import { Markers } from "./components/Markers/Markers";
 
 type Props = {
   embedded?: boolean;
@@ -213,207 +210,7 @@ export const InteractiveMap = (props: Props) => {
           crs={crs}
         >
           <TileLayer url="/tiles/{z}/{x}/{y}.png" noWrap={true} />
-          {Object.keys(resourceNodes).map(key => {
-            // @ts-ignore
-            if (!selection.nodes[key]) {
-              return null;
-            }
-
-            // @ts-ignore
-            const markers = resourceNodes[key] as Array<
-              RnMarkerFragment & { pos: MarkerPos; obstructed: boolean }
-            >;
-
-            return (
-              <MarkerClusterGroup
-                removeOutsideVisibleBounds={true}
-                maxClusterRadius={0}
-                key={key}
-              >
-                {markers.map(
-                  marker =>
-                    selection.quality[marker.quality] && (
-                      <Marker
-                        position={marker.pos}
-                        icon={RNMarkerIcon({ marker, iconSize: markerSize })}
-                        key={marker.id}
-                      >
-                        <Popup>
-                          <ul
-                            style={{ listStyle: "none", margin: 0, padding: 0 }}
-                          >
-                            {marker.obstructed && (
-                              <li>
-                                <strong>Obstructed by boulder</strong>
-                              </li>
-                            )}
-                            <li>
-                              <b>Type</b>: {marker.type}
-                            </li>
-                            <li>
-                              <b>Quality</b>: {marker.quality}
-                            </li>
-                            <li>
-                              <b>X</b>: {marker.pos.lat}
-                            </li>
-                            <li>
-                              <b>Y</b>: {marker.pos.lng}
-                            </li>
-                            <li>
-                              <b>Z</b>: {marker.pos.alt}
-                            </li>
-                            <li>
-                              <b>ID</b>: {marker.id}
-                            </li>
-                          </ul>
-                        </Popup>
-                      </Marker>
-                    )
-                )}
-              </MarkerClusterGroup>
-            );
-          })}
-          {Object.keys(slugs).map(key => {
-            // @ts-ignore
-            if (!selection.slugs[key]) {
-              return null;
-            }
-
-            // @ts-ignore
-            const markers = slugs[key] as Array<
-              MarkerSlugInlineFragment & { pos: MarkerPos; obstructed: boolean }
-            >;
-
-            return (
-              <MarkerClusterGroup
-                removeOutsideVisibleBounds={true}
-                maxClusterRadius={0}
-                key={key}
-              >
-                {markers.map(marker => (
-                  <CircleMarker
-                    radius={(markerSize - 10) / 2}
-                    stroke={true}
-                    color={"#fff"}
-                    weight={2}
-                    fill={true}
-                    fillOpacity={1}
-                    fillColor={getSlugColor(marker.slugType)}
-                    center={marker.pos}
-                    key={marker.id}
-                  >
-                    <Popup>
-                      <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                        {marker.obstructed && (
-                          <li>
-                            <strong>Obstructed by boulder</strong>
-                          </li>
-                        )}
-                        <li>
-                          <b>Type</b>: Slug
-                        </li>
-                        <li>
-                          <b>Quality</b>: {marker.slugType}
-                        </li>
-                        <li>
-                          <b>X</b>: {marker.pos.lat}
-                        </li>
-                        <li>
-                          <b>Y</b>: {marker.pos.lng}
-                        </li>
-                        <li>
-                          <b>Z</b>: {marker.pos.alt}
-                        </li>
-                        <li>
-                          <b>ID</b>: {marker.id}
-                        </li>
-                      </ul>
-                    </Popup>
-                  </CircleMarker>
-                ))}
-              </MarkerClusterGroup>
-            );
-          })}
-          {selection.pods && (
-            <MarkerClusterGroup
-              removeOutsideVisibleBounds={true}
-              maxClusterRadius={0}
-            >
-              {dropPods.map(marker => (
-                <Marker
-                  position={marker.pos}
-                  icon={DropPodIcon({ marker, iconSize: markerSize })}
-                  key={marker.id}
-                >
-                  <Popup>
-                    <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                      {marker.obstructed && (
-                        <li>
-                          <strong>Obstructed by boulder</strong>
-                        </li>
-                      )}
-                      <li>
-                        <b>X</b>: {marker.pos.lat}
-                      </li>
-                      <li>
-                        <b>Y</b>: {marker.pos.lng}
-                      </li>
-                      <li>
-                        <b>Z</b>: {marker.pos.alt}
-                      </li>
-                      <li>
-                        <b>ID</b>: {marker.id}
-                      </li>
-                      {marker.requirement && (
-                        <React.Fragment>
-                          {marker.requirement.powerNeeded && (
-                            <li>
-                              <b>Power:</b> {marker.requirement.powerNeeded}MW
-                            </li>
-                          )}
-                          {marker.requirement.itemName && (
-                            <li>
-                              <b>Items required:</b>{" "}
-                              {marker.requirement.itemQuantity || ""}{" "}
-                              {marker.requirement.itemName}
-                            </li>
-                          )}
-                        </React.Fragment>
-                      )}
-                    </ul>
-                  </Popup>
-                </Marker>
-              ))}
-            </MarkerClusterGroup>
-          )}
-          <MarkerClusterGroup
-            removeOutsideVisibleBounds={true}
-            maxClusterRadius={0}
-          >
-            {players.map(player => (
-              <Marker position={[player.y, player.x]}>
-                <Popup>
-                  <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                    <li style={{ textAlign: "center" }}>
-                      <b>PLAYER</b>
-                    </li>
-                    <li>
-                      <b>ID</b>: {player.id}
-                    </li>
-                    <li>
-                      <b>X</b>: {player.x}
-                    </li>
-                    <li>
-                      <b>Y</b>: {player.y}
-                    </li>
-                    <li>
-                      <b>Z</b>: {player.z}
-                    </li>
-                  </ul>
-                </Popup>
-              </Marker>
-            ))}
-          </MarkerClusterGroup>
+          <Markers markerSize={markerSize} />
         </Map>
         <S.MenuIcon onClick={toggleMenu}>
           {menuOpen ? <IconClose /> : <IconMenu />}

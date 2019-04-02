@@ -1,6 +1,21 @@
 import { ResourceNodeType } from "../__generated__";
 
-export function getDepositColor(type: ResourceNodeType) {
+export function getDepositColor(
+  type:
+    | "IRON"
+    | "COPPER"
+    | "LIMESTONE"
+    | "BAUXITE"
+    | "URANIUM"
+    | "COAL"
+    | "OIL"
+    | "SULFUR"
+    | "QUARTZ"
+    | "SAM"
+    | "CATERIUM"
+    | "GEYSER"
+    | "UNKNOWN"
+) {
   switch (type) {
     case ResourceNodeType.Bauxite:
       return "#D973A9";

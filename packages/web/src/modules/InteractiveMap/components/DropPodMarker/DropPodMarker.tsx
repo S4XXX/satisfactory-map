@@ -4,12 +4,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { DropPodMarkerFragment } from "../../../../__generated__";
 
 type Props = {
-  marker: DropPodMarkerFragment;
   iconSize: number;
 };
 
 export const DropPodIcon = (props: Props) => {
-  const { marker, iconSize } = props;
+  const { iconSize } = props;
 
   return L.divIcon({
     html: renderToStaticMarkup(<DropPodIconSvg color="deeppink" />),

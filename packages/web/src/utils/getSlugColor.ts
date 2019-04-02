@@ -1,14 +1,10 @@
-import { SlugType } from "../__generated__";
-
-export function getSlugColor(slugType: SlugType) {
+export function getSlugColor(slugType: "PURPLE" | "GREEN" | "YELLOW") {
   switch (slugType) {
-    case SlugType.Green:
+    case "GREEN":
       return "#08D1D8";
-    case SlugType.Yellow:
+    case "YELLOW":
       return "#F9F903";
-    case SlugType.Purple:
+    case "PURPLE":
       return "#D100ED";
-    default:
-      return "red";
   }
 }

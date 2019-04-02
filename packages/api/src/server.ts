@@ -19,7 +19,8 @@ export async function start() {
   await createConnection({
     type: "postgres",
     extra: {
-      ssl: process.env.NODE_ENV === "production"
+      // ssl: process.env.NODE_ENV === "production"
+      ssl: false
     },
     entities: [`${__dirname}/**/*.model.*s`],
     migrations: [`${__dirname}/migrations/**.*s`],
