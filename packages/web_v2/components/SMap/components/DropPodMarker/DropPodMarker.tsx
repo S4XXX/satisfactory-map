@@ -36,21 +36,44 @@ export const DropPodMarker = (props: Props) => {
             <b>Z:</b> {marker.alt}
           </li>
         </ul>
+        <p>Requirements</p>
+        {marker.target.requirement ? (
+          <ul>
+            <li>
+              <b>Power:</b> {marker.target.requirement.powerNeeded || "none"}
+            </li>
+            <li>
+              <b>Item:</b>{" "}
+              {marker.target.requirement.itemName
+                ? `${marker.target.requirement.itemQuantity} ${
+                    marker.target.requirement.itemName
+                  }`
+                : "none"}
+            </li>
+          </ul>
+        ) : (
+          <p>None</p>
+        )}
       </Popup>
     </Marker>
   );
 };
 
-const generateIcon = (color: string, iconSize?: number) =>
+const generateIcon = (color: string, iconSize: number) =>
   L.divIcon({
-    iconSize: [iconSize || 30, iconSize || 30],
+    iconSize: [30 * iconSize, 30 * iconSize],
     html: renderToStaticMarkup(
-      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        height="40"
+        width="40"
+        viewBox="0 0 40 40"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <rect
           x="1"
           y="1"
-          width="38"
-          height="38"
+          width={30 * iconSize}
+          height={30 * iconSize}
           rx="8"
           fill={color}
           stroke="#fff"

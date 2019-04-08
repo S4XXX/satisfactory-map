@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import { FeatureGroup, TileLayer, Marker } from "react-leaflet";
-import { Map } from "react-leaflet";
+import { Map, CircleMarker } from "react-leaflet";
 import * as L from "leaflet";
 import * as S from "./SMap.style";
 import {
@@ -75,15 +75,17 @@ export class SMap extends React.PureComponent<Props, State> {
     this.handleIconSizeChange = this.handleIconSizeChange.bind(this);
     this.shouldRenderRNNode = this.shouldRenderRNNode.bind(this);
     this.persistState = this.persistState.bind(this);
-    this.handlePlayerLocationChange = this.handlePlayerLocationChange.bind(this);
+    this.handlePlayerLocationChange = this.handlePlayerLocationChange.bind(
+      this
+    );
   }
 
   handlePlayerLocationChange(locations: PlayerLocation[]) {
     this.setState({ players: locations });
 
     if (locations.length === 1) {
-      const p = locations[0]
-      
+      const p = locations[0];
+
       this.map.current!.leafletElement.setView([p.y, p.x], 7, {
         animate: true
       });
@@ -209,6 +211,8 @@ export class SMap extends React.PureComponent<Props, State> {
       locating
     } = this.state;
     const { embed } = this.props;
+
+    console.log(markers.artifacts);
 
     return (
       <S.Root>
@@ -372,9 +376,18 @@ export class SMap extends React.PureComponent<Props, State> {
               clusterSize={0}
               rerender={iconSize}
               markers={markers.dropPods}
-              displayed={selection.dropPods}
+              displayed={true}
               render={m => (
                 <DropPodMarker key={m.id} marker={m} iconSize={iconSize} />
+              )}
+            />
+            <ClusterGroup
+              clusterSize={0}
+              rerender={iconSize}
+              markers={markers.artifacts.MERCER}
+              displayed={true}
+              render={m => (
+                <DefaultMarker key={m.id} marker={m} iconSize={iconSize} />
               )}
             />
             <FeatureGroup>

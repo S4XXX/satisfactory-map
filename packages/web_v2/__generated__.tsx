@@ -29,6 +29,11 @@ export enum SlugType {
   Green = "GREEN"
 }
 
+export enum ArtifactType {
+  Somersloop = "SOMERSLOOP",
+  Mercer = "MERCER"
+}
+
 export enum OrderDirection {
   Asc = "ASC",
   Desc = "DESC"
@@ -94,6 +99,7 @@ export type MarkerFragment = {
 export type MarkerTarget =
   | MarkerResourceNodeInlineFragment
   | MarkerSlugInlineFragment
+  | MarkerArtifactInlineFragment
   | MarkerDropPodInlineFragment;
 
 export type MarkerResourceNodeInlineFragment = {
@@ -114,10 +120,30 @@ export type MarkerSlugInlineFragment = {
   slugType: SlugType;
 };
 
+export type MarkerArtifactInlineFragment = {
+  __typename?: "Artifact";
+
+  id: string;
+
+  artifactType: Maybe<ArtifactType>;
+};
+
 export type MarkerDropPodInlineFragment = {
   __typename?: "DropPod";
 
   id: string;
+
+  requirement: Maybe<MarkerRequirement>;
+};
+
+export type MarkerRequirement = {
+  __typename?: "DropPodRequirement";
+
+  itemName: Maybe<string>;
+
+  itemQuantity: Maybe<number>;
+
+  powerNeeded: Maybe<number>;
 };
 
 import gql from "graphql-tag";
@@ -145,8 +171,17 @@ export const MarkerFragmentDoc = gql`
         id
         slugType: type
       }
+      ... on Artifact {
+        id
+        artifactType: type
+      }
       ... on DropPod {
         id
+        requirement {
+          itemName
+          itemQuantity
+          powerNeeded
+        }
       }
     }
   }

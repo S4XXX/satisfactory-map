@@ -4,7 +4,9 @@ import {
   SlugType,
   MarkerSlugInlineFragment,
   MarkerResourceNodeInlineFragment,
-  MarkerDropPodInlineFragment
+  MarkerDropPodInlineFragment,
+  ArtifactType,
+  MarkerArtifactInlineFragment
 } from "../../../__generated__";
 
 type NodeTypes = Exclude<
@@ -16,11 +18,15 @@ type SlugMarker = MarkerFragment & { target: MarkerSlugInlineFragment };
 type ResourceNodeMarker = MarkerFragment & {
   target: MarkerResourceNodeInlineFragment;
 };
+type ArtifactMarker = MarkerFragment & {
+  target: MarkerArtifactInlineFragment;
+};
 type DropPodMarker = MarkerFragment & { target: MarkerDropPodInlineFragment };
 
 type MarkerTree = {
   slugs: { [k in SlugType]: SlugMarker[] };
   nodes: { [k in NodeTypes]: ResourceNodeMarker[] };
+  artifacts: { [k in ArtifactType]: ArtifactMarker[] };
   geysers: ResourceNodeMarker[];
   unknowns: ResourceNodeMarker[];
   dropPods: DropPodMarker[];
@@ -76,6 +82,10 @@ export function sortMarkers(markers: MarkerFragment[]) {
         SULFUR: [],
         URANIUM: []
       },
+      artifacts: {
+        SOMERSLOOP: [],
+        MERCER: []
+      },
       geysers: [],
       unknowns: [],
       dropPods: []
@@ -93,6 +103,8 @@ export function sortMarkers(markers: MarkerFragment[]) {
       m.target.rnType === ResourceNodeType.Unknown
     ) {
       tree.unknowns.push(m as ResourceNodeMarker);
+    } else if (m.target.__typename === "Artifact") {
+      tree.artifacts[m.target.artifactType].push(m as ArtifactMarker);
     } else if (m.target.__typename === "ResourceNode") {
       tree.nodes[m.target.rnType as NodeTypes].push(m as ResourceNodeMarker);
     } else if (m.target.__typename === "DropPod") {

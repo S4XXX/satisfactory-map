@@ -1,0 +1,10 @@
+type Artifact {
+  id: ID!
+
+  type: ArtifactType
+}
+
+enum ArtifactType {
+  SOMERSLOOP
+  MERCER
+}

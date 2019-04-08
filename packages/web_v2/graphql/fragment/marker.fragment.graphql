@@ -14,8 +14,17 @@ fragment Marker on Marker {
       id
       slugType: type
     }
+    ... on Artifact {
+      id
+      artifactType: type
+    }
     ... on DropPod {
       id
+      requirement {
+        itemName
+        itemQuantity
+        powerNeeded
+      }
     }
   }
 }

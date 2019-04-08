@@ -3,8 +3,11 @@ import { Column, Entity } from "typeorm";
 
 @Entity()
 export class Marker extends Resource {
-  @Column({ type: "text", enum: ["RESOURCE_NODE", "SLUG", "DROP_POD"] })
-  targetType: "RESOURCE_NODE" | "SLUG" | "DROP_POD";
+  @Column({
+    type: "text",
+    enum: ["RESOURCE_NODE", "SLUG", "DROP_POD", "ARTIFACT"]
+  })
+  targetType: "RESOURCE_NODE" | "SLUG" | "DROP_POD" | "ARTIFACT";
 
   @Column()
   targetId: number;

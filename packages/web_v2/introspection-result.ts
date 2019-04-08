@@ -43,6 +43,9 @@ const result: IntrospectionResultData = {
           },
           {
             name: "DropPod"
+          },
+          {
+            name: "Artifact"
           }
         ]
       }

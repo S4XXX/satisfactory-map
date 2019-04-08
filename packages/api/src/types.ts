@@ -29,6 +29,11 @@ export enum SlugType {
   Green = "GREEN"
 }
 
+export enum ArtifactType {
+  Somersloop = "SOMERSLOOP",
+  Mercer = "MERCER"
+}
+
 export enum OrderDirection {
   Asc = "ASC",
   Desc = "DESC"
@@ -138,6 +143,12 @@ export interface DropPodRequirement {
   powerNeeded?: Maybe<number>;
 }
 
+export interface Artifact {
+  id: string;
+
+  type?: Maybe<ArtifactType>;
+}
+
 export interface User {
   id: string;
 
@@ -166,7 +177,7 @@ export interface MarkersConnectionQueryArgs {
 // Unions
 // ====================================================
 
-export type MarkerTarget = ResourceNode | Slug | DropPod;
+export type MarkerTarget = ResourceNode | Slug | DropPod | Artifact;
 
 import {
   GraphQLResolveInfo,
@@ -537,6 +548,26 @@ export type DropPodRequirementPowerNeededResolver<
   TContext = GQLContext
 > = Resolver<R, Parent, TContext>;
 
+export interface ArtifactResolvers<
+  TContext = GQLContext,
+  TypeParent = Artifact
+> {
+  id?: ArtifactIdResolver<string, TypeParent, TContext>;
+
+  type?: ArtifactTypeResolver<Maybe<ArtifactType>, TypeParent, TContext>;
+}
+
+export type ArtifactIdResolver<
+  R = string,
+  Parent = Artifact,
+  TContext = GQLContext
+> = Resolver<R, Parent, TContext>;
+export type ArtifactTypeResolver<
+  R = Maybe<ArtifactType>,
+  Parent = Artifact,
+  TContext = GQLContext
+> = Resolver<R, Parent, TContext>;
+
 export interface UserResolvers<TContext = GQLContext, TypeParent = User> {
   id?: UserIdResolver<string, TypeParent, TContext>;
 
@@ -590,8 +621,8 @@ export interface MarkerTargetResolvers {
   __resolveType: MarkerTargetResolveType;
 }
 export type MarkerTargetResolveType<
-  R = "ResourceNode" | "Slug" | "DropPod",
-  Parent = ResourceNode | Slug | DropPod,
+  R = "ResourceNode" | "Slug" | "DropPod" | "Artifact",
+  Parent = ResourceNode | Slug | DropPod | Artifact,
   TContext = GQLContext
 > = TypeResolveFn<R, Parent, TContext>;
 
@@ -649,6 +680,7 @@ export interface IResolvers<TContext = GQLContext> {
   Slug?: SlugResolvers<TContext>;
   DropPod?: DropPodResolvers<TContext>;
   DropPodRequirement?: DropPodRequirementResolvers<TContext>;
+  Artifact?: ArtifactResolvers<TContext>;
   User?: UserResolvers<TContext>;
   Connection?: ConnectionResolvers;
   Edge?: EdgeResolvers;

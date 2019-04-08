@@ -13,7 +13,7 @@ type Marker {
   updatedAt: DateTime!
 }
 
-union MarkerTarget = ResourceNode | Slug | DropPod
+union MarkerTarget = ResourceNode | Slug | DropPod | Artifact
 
 type Query {
   markersConnection(

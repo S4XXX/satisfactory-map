@@ -24,7 +24,7 @@ export const DefaultMarker = (props: Props) => {
       fill={true}
       fillOpacity={1}
       fillColor={unknown}
-      radius={iconSize / 2}
+      radius={(30 * iconSize) / 2}
       center={marker}
     >
       <Popup>
